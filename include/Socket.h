@@ -35,4 +35,13 @@ class Socket {
         int getFD() const {
                 return sockfd;
             }
+
+
+        // Sends a string to the connected socket
+        // Returns number of bytes sent
+        ssize_t send(const std::string& message);
+
+        // Receives raw bytes into a buffer
+        // Returns number of bytes received (0 means disconnected)
+        ssize_t recv(char* buffer, size_t size);
 };

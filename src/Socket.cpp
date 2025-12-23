@@ -88,3 +88,20 @@ void Socket::connect(const std::string& host, int port){
         throw std::runtime_error("Connection Failed");
     }
 }
+
+ssize_t Socket::send(const std::string& message) {
+    ssize_t bytes_sent = ::send(sockfd, message.c_str(), message.size(), 0);
+    if (bytes_sent < 0) {
+        throw std::runtime_error("Send failed");
+    }
+    return bytes_sent;
+}
+
+ssize_t Socket::recv(char* buffer, size_t size) {
+    ssize_t bytes_received = ::recv(sockfd, buffer, size, 0);
+    if (bytes_received < 0) {
+        throw std::runtime_error("Receive failed");
+    }
+    return bytes_received;
+}
+
