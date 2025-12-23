@@ -6,7 +6,6 @@
 #include <string>
 #include <stdexcept>
 #include <unistd.h>
-#include <sys/un.h>
 
 class Socket {
     private:
@@ -32,4 +31,8 @@ class Socket {
         void connect(const std::string& host, int port); // Connect method
 
         Socket accept(); // Accept method
+
+        int getFD() const {
+                return sockfd;
+            }
 };
