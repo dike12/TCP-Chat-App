@@ -36,7 +36,7 @@ Socket& Socket::operator=(Socket&& other) noexcept {
 }
 
 
-
+//server methods
 void Socket::bind(int port){
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
@@ -69,4 +69,22 @@ Socket Socket::accept() {
     }
 
     return Socket(client_fd);
+}
+
+
+
+
+//client methods
+void Socket::connect(const std::string& host, int port){
+    struct sockaddr_in server_addr;
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(port);
+
+    if(inet_pton(AF_INET, host.c_str(), &server_addr.sin_addr) <= 0){
+        throw std::runtime_error("Invalid address/ Address not supported");
+    }
+
+    if(::connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0){
+        throw std::runtime_error("Connection Failed");
+    }
 }
