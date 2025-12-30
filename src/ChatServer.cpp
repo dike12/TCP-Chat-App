@@ -56,7 +56,27 @@ void ChatServer::run() {
 }
 
 void ChatServer::handleNewConnection() {
-    std::cout << "Someone is trying to connect (logic coming soon)..." << std::endl;
+    //this creates a new Socket object for the incoming connection for this client
+    Socket new_client = serverSocket.accept();
+
+    //get the FD
+    int client_fd = new_client.getFD();
+
+    //add to master set
+    FD_SET(client_fd, &masterSet);
+
+    //if FD is higher than max_fd, update max_fd
+    if(client_fd > max_fd) {
+        max_fd = client_fd;
+    }
+
+    //move the socket into the clients map
+    clients.emplace(client_fd, std::move(new_client));
+
+    std::cout << "New connection from Client " << client_fd << std::endl;
+
+    //Send a welcome message
+    clients[client_fd].send("Welcome to the Chat Server!\n");
 }
 
 void ChatServer::handleClientMessage(int client_fd) {
