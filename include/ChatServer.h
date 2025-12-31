@@ -1,17 +1,17 @@
 #pragma once
+
 #include "Socket.h"
 #include <map>
 #include <sys/select.h>
 #include <string>
 #include <vector>
+#include "DatabaseManager.h"
 
 
 class ChatServer {
     public:
         ChatServer(int port);  //constructor, just need port number to start listening
-        
         ~ChatServer(); //destructor
-
         void run(); //main server loop to accept and handle clients - runs forever(well...)
 
     private:
@@ -28,4 +28,6 @@ class ChatServer {
         void handleNewConnection(); //accept new client connections
         void handleClientMessage(int client_fd); //handle messages from clients
         void broadcastMessage(int sender_fd, const std::string& message); //send message to all clients except sender
+
+        DatabaseManager db;
 };

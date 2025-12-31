@@ -3,6 +3,11 @@
 #include <iostream>
 
 ChatServer::ChatServer(int port) : port(port) {
+    // Initialize the database
+    if(!db.open("chat_history.db")){
+        std::cerr << "Warning: Could not open database!" << std::endl;
+    }
+
     //FD_ZERO initializes the file descriptor sets to be empty
     FD_ZERO(&masterSet);
     FD_ZERO(&readSet);
@@ -102,6 +107,9 @@ void ChatServer::handleClientMessage(int client_fd) {
         // process the message
         std::string message(buffer, bytes_received);
         std::cout << "Received message from Client " << client_fd << ": " << message;
+
+        // save the message to the database
+        db.saveMessage(client_fd, message);
 
         // broadcast the message to other clients
         broadcastMessage(client_fd, message);
