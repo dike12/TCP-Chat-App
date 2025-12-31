@@ -80,9 +80,63 @@ void ChatServer::handleNewConnection() {
 }
 
 void ChatServer::handleClientMessage(int client_fd) {
-    std::cout << "Client " << client_fd << " sent a message (Logic coming soon)" << std::endl;
+    char buffer[4096]; //4KB buffer - a container for the incoming message
+    std::fill(buffer, buffer + sizeof(buffer), 0); //clear the buffer
+
+    try
+    {
+        //read data
+        ssize_t bytes_received = clients[client_fd].recv(buffer, sizeof(buffer));
+
+        //check for disconnection
+        if(bytes_received == 0) {
+            std::cout << "Client " << client_fd << " disconnected." << std::endl;
+            
+            //remove from master set so select() stops watching it
+            FD_CLR(client_fd, &masterSet); 
+
+            clients.erase(client_fd); //remove from clients map
+            return;
+        }
+
+        // process the message
+        std::string message(buffer, bytes_received);
+        std::cout << "Received message from Client " << client_fd << ": " << message;
+
+        // broadcast the message to other clients
+        broadcastMessage(client_fd, message);
+    }
+    catch(const std::exception& e)
+    {
+        //if recv fails (e.g connection reset), treat it as a disconnection
+        std::cerr << "Error with client " << client_fd << ": " << e.what() << std::endl;
+        FD_CLR(client_fd, &masterSet);
+        clients.erase(client_fd);
+    }
+
+    
 }
 
-void ChatServer::broadcastMessage(int sender_fd, const std::string& message) {
-    // Logic coming soon
+    void ChatServer::broadcastMessage(int sender_fd, const std::string& message) {
+        // Construct final string
+        std::string final_msg = "Client " + std::to_string(sender_fd) + ": " + message;
+
+        // loop through all clients - pair.firsrt is the fd, pair.second is the Socket
+        for(auto& pair : clients){
+            int target_fd = pair.first;
+            Socket& target_socket = pair.second;
+
+            //dont send to the sender
+            if(target_fd != sender_fd) {
+                try
+                {
+                    target_socket.send(final_msg);
+                }
+                catch(const std::exception& e)
+                {
+                    std::cerr << "Failed to send to client " << target_fd << std::endl;
+                }
+                
+            }
+        }
 }
