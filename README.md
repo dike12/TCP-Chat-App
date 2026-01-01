@@ -1,4 +1,19 @@
 
+# TCP Chat APP
+
+I built this App to learn network programming, Qt, and practice C++
+
+
+## Features
+
+* **Custom Network Protocol:** Built on top of raw TCP sockets (`socket`, `bind`, `select`).
+* **I/O Multiplexing:** Server handles multiple clients efficiently using `select()` (non-blocking I/O).
+* **Concurrency:** Client uses `std::thread` and `std::atomic` to handle sending and receiving simultaneously without UI freezing.
+* **Persistence:** Integrated **SQLite** database to automatically save chat history.
+* **Dual Interface:** Includes both a Command Line (CLI) client and a Graphical (GUI) client.
+* **Event-Driven UI:** GUI utilizes Qt5's Signal & Slot mechanism for thread-safe UI updates.
+
+
 ## Tech Stack & Architecture
 
 | Component | Technology | Description |
@@ -60,7 +75,3 @@ Run the server first in a dedicated terminal window. You must specify the port n
 ```bash
 ./chat_client 127.0.0.1 8080
 ```
-
-
-### Example
-![TCP Chat App Demo](TCP-Chat-App/media/app screenshot.png)
