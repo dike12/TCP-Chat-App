@@ -78,4 +78,4 @@ Run the server first in a dedicated terminal window. You must specify the port n
 
 
 ### Example
-![TCP Chat App Demo](TCP-Chat-App/media/app screenshot.png)
+![TCP Chat App Demo](media/app%20screenshot.png)
