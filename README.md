@@ -76,4 +76,6 @@ Run the server first in a dedicated terminal window. You must specify the port n
 ./chat_client 127.0.0.1 8080
 ```
 
+
+### Example
 ![TCP Chat App Demo](TCP-Chat-App/media/app screenshot.png)
