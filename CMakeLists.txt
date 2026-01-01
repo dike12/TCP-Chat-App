@@ -23,7 +23,9 @@ target_link_libraries(chat_server PRIVATE SQLite::SQLite3)
 
 add_executable(gui_client
     src/client_gui_main.cpp
+    src/ChatWindow.cpp
     src/Socket.cpp
+    include/ChatWindow.h
 )
 target_link_libraries(gui_client PRIVATE Qt5::Widgets pthread)
 
